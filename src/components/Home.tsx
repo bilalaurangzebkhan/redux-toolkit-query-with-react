@@ -1,7 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useGetProductsQuery } from "../redux/api/productApi";
 
 const Home = () => {
+
+  const { data, isLoading, error, isError } = useGetProductsQuery()
+  
   return (
     <div>
       <div
