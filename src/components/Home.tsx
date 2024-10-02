@@ -1,10 +1,15 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useGetProductsQuery } from "../redux/api/productApi";
 
 const Home = () => {
 
   const { data, isLoading, error, isError } = useGetProductsQuery()
+  useEffect(() => {
+    if (error) alert(error);
+  }, [error])
+
+  if(isLoading) return <h1>Loading....</h1>;
   
   return (
     <div>
@@ -23,11 +28,12 @@ const Home = () => {
             </tr>
           </thead>
           <tbody>
+            {data?.products?.map((product) => (
             <tr>
-              <th scope="row">asdasdasd</th>
-              <td>Laptop</td>
-              <td>Laptop</td>
-              <td>$23</td>
+              <th scope="row">{product?._id}</th>
+              <td>{product?.name}</td>
+              <td>{product?.price}</td>
+              <td>{product?.description}</td>
               <td>
                 <Link to={`/product/sdfsdf`} className="btn btn-primary">
                   Edit
@@ -35,6 +41,7 @@ const Home = () => {
                 <button className="btn btn-danger ms-1">Delete</button>
               </td>
             </tr>
+            ))}
           </tbody>
         </table>
       </div>
