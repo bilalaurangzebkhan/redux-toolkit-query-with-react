@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useGetProductByIdQuery, useUpdateProductMutation } from "../redux/api/productApi";
+import { useParams } from "react-router-dom";
 
 const UpdateProduct: React.FC = () => {
   const [name, setName] = useState("");
   const [price, setPrice] = useState(0);
   const [description, setDescription] = useState("");
 
+  const params = useParams()
+
+  const { data } = useGetProductByIdQuery(params?.id || "");
+
+  const [ updateProduct, { isLoading, error, isSuccess } ] = useUpdateProductMutation()
+  
+  useEffect(() => {
+
+    if(data) {
+      setName(data.product.name)
+      setPrice(data.product.price)
+      setDescription(data.product.description)
+    }
+    if (error) alert(error);
+
+    if (isSuccess) {
+      alert("Product updated successfully");
+    }
+  }, [error, isSuccess])
+
+
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission here
+    updateProduct({ id: data?.product?._id!, name, price, description })
   };
 
   return (

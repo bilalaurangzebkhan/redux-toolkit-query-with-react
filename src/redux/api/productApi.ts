@@ -14,14 +14,24 @@ export const productApi = createApi({
         getProducts: builder.query<{products: Product[]}, void>({
             query: () => '/products'
         }),
+        getProductById: builder.query<{product: Product}, string>({
+            query: (id) => `/products/${id}`
+        }),
         createProduct: builder.mutation<Product, Partial<Product>>({
             query: (product) => ({
                 url: "/products",
                 method: "POST",
                 body: product,
             })
+        }),
+        updateProduct: builder.mutation<Product, {id: string} & Partial<Product>>({
+            query: (id, ...product) => ({
+                url: `/products/${id}`,
+                method: "PUT",
+                body: product,
+            })
         })
     }),
 });
 
-export const { useGetProductsQuery, useCreateProductMutation } = productApi;
+export const { useGetProductsQuery, useGetProductByIdQuery, useCreateProductMutation, useUpdateProductMutation } = productApi;
