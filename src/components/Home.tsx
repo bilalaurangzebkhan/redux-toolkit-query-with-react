@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useDeleteProductMutation, useGetProductsQuery } from "../redux/api/productApi";
+import { useDeleteProductMutation, useGetProductsQuery, useLazyGetProductsQuery } from "../redux/api/productApi";
 
 const Home = () => {
 
-  const { data, isLoading, error, isError } = useGetProductsQuery()
+  const { data, isLoading, error, refetch } = useGetProductsQuery();
+  //const [getProducts, { data, isLoading, error }] = useLazyGetProductsQuery();
   const [deleteProduct] = useDeleteProductMutation();
 
   useEffect(() => {
@@ -15,10 +16,16 @@ const Home = () => {
     deleteProduct(id);
   }
 
+  const refetchDataHandler = () => {
+    refetch();
+    //getProducts();
+  }
+
   if(isLoading) return <h1>Loading....</h1>;
   
   return (
     <div>
+      <button onClick={refetchDataHandler}>Refetch</button>
       <div
         className="d-flex justify-content-center align-items-center text-center w-100 me-5"
         style={{ height: "100vh" }}

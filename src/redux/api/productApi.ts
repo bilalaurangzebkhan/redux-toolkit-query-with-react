@@ -10,12 +10,15 @@ type Product = {
 export const productApi = createApi({
     reducerPath: 'productApi',
     baseQuery: fetchBaseQuery({ baseUrl: '/api' }),
+    tagTypes: ["Products", "Product"],
     endpoints: (builder) => ({
         getProducts: builder.query<{products: Product[]}, void>({
-            query: () => '/products'
+            query: () => '/products',
+        providesTags: ["Products"],
         }),
         getProductById: builder.query<{product: Product}, string>({
-            query: (id) => `/products/${id}`
+            query: (id) => `/products/${id}`,
+            providesTags: ["Product"],
         }),
         createProduct: builder.mutation<Product, Partial<Product>>({
             query: (product) => ({
@@ -29,15 +32,17 @@ export const productApi = createApi({
                 url: `/products/${id}`,
                 method: "PUT",
                 body: product,
-            })
+            }),
+            invalidatesTags: ["Product"],
         }),
         deleteProduct: builder.mutation<void, string>({
             query: (id) => ({
                 url: `/products/${id}`,
                 method: "DELETE"
             }),
+            invalidatesTags: ["Products"],
         })
     }),
 });
 
-export const { useGetProductsQuery, useGetProductByIdQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation } = productApi;
+export const { useGetProductsQuery, useLazyGetProductsQuery, useGetProductByIdQuery, useCreateProductMutation, useUpdateProductMutation, useDeleteProductMutation } = productApi;
