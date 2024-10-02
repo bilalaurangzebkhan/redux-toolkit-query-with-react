@@ -1,13 +1,19 @@
 import React, { useEffect } from "react";
 import { Link } from "react-router-dom";
-import { useGetProductsQuery } from "../redux/api/productApi";
+import { useDeleteProductMutation, useGetProductsQuery } from "../redux/api/productApi";
 
 const Home = () => {
 
   const { data, isLoading, error, isError } = useGetProductsQuery()
+  const [deleteProduct] = useDeleteProductMutation();
+
   useEffect(() => {
     if (error) alert(error);
   }, [error])
+
+  const deleteProductHandler = async(id: string) => {
+    deleteProduct(id);
+  }
 
   if(isLoading) return <h1>Loading....</h1>;
   
@@ -38,7 +44,7 @@ const Home = () => {
                 <Link to={`/product/sdfsdf`} className="btn btn-primary">
                   Edit
                 </Link>
-                <button className="btn btn-danger ms-1">Delete</button>
+                <button className="btn btn-danger ms-1" onClick={() => deleteProductHandler(product?._id)}>Delete</button>
               </td>
             </tr>
             ))}
